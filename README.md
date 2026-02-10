@@ -25,22 +25,23 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 
 ## Setup
 
-1) Create/edit a `.env` file in the project root:
-
+1) Edit the `.env.example` file in the project root:
+```
 FACEIT_API_KEY=your_key_here
-FACEIT_NICKNAME=user_name
+FACEIT_NICKNAME=username_here
 FACEIT_GAME=cs2
+```
+Then rename to `.env`
 
 2) Install Dependencies:
+```
 go get github.com/joho/godotenv@latest
 go mod tidy
-
-3) Run:
-go run .
+```
+4) Run:
+`go run .`
 
 Notes
 The FACEIT API key should be treated as a secret. Do not embed it into distributed firmware/devices.
 
 The dot matrix display integration will be added after the data-fetching side is finalized.
-
-::contentReference[oaicite:0]{index=0}
