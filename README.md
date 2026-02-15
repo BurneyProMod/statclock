@@ -55,4 +55,5 @@ go mod tidy
 Notes
 The FACEIT API key should be treated as a secret. Do not embed it into distributed firmware/devices.
 
-The dot matrix display integration will be added after the data-fetching side is finalized.
+## References:
+1) https://www.xda-developers.com/built-15-esp32-smart-clock/
