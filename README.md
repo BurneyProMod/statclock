@@ -1,16 +1,17 @@
 # FACEIT Dot Matrix Display
 
-This project fetches a FACEIT player’s ELO and prints it to stdout (e.g., `Elo: 2123`). The end goal is to drive an dot matrix display mounted on 3D-printed Counter-Strike guns as a "stattrak" counter.
+![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
+A statrak display that fetches player stats with the FaceIT and Leetify API
 
 For now, the code only supports FaceIT ELO, but it will be expanded to additional stats such as Win/Loss, CS2 Premiere rank, league placement, and more.
 
 ## Roadmap / TODO
 
-- Display additional FACEIT stats (Win/Loss, matches, account age, etc.)
-- Display CS2 Premiere stats
-- Determine/build the display unit  
-  - Likely: **Adafruit 8x8 LED Backpack** (I2C) as an initial target
-- Refactor main.go to cycle through stats to display
+- Fix Font Scaling
+- Store local variables in SQLite
+- Display Extended FaceIT stats
+- Leetify API Setup
+- Mini Display Option
 
 ## Flashing ESP32
 ### Prereqs:
