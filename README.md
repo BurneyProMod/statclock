@@ -12,19 +12,30 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
   - Likely: **Adafruit 8x8 LED Backpack** (I2C) as an initial target
 - Refactor main.go to cycle through stats to display
 
-## FACEIT API Documentation
+## Flashing ESP32
+### Prereqs:
+1) Install pipx
+  `sudo apt install -y pipx`
+2) Install ESPHome
+`pipx install esphome`
+### Flashing:
+1) In the repo directory, use the command:
+`esphome run esp32.yaml`
 
+## FACEIT API Documentation
 - https://docs.faceit.com/api/data/
 
-
+## Leetify API Documentation
+- https://leetify.com/blog/leetify-api-developer-guidelines/
 ## Requirements
 
+- Pipx
+- ESP-Home
 - Go installed
 - A FACEIT Data API key
 - `.env` configured with your FACEIT API key and player nickname
 
 ## Setup
-
 1) Edit the `.env.example` file in the project root:
 ```
 FACEIT_API_KEY=your_key_here

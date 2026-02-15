@@ -1,0 +1,53 @@
+esphome:
+  name: faceitClock
+
+esp32:
+  variant: esp32c3
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+  
+logger:
+
+spi:
+  clk_pin: GPIO5
+  mosi_pin: GPIO4
+
+font:
+  - file: "gfonts://Press Start 2P"
+    id: matrix_font
+    size: 8
+
+display:
+  - platform: max7219digit
+    id: max_display
+    cs_pin: GPIO6
+    num_chips: 4
+    intensity: 8
+    update_interval: 250ms
+    lambda: |-
+      // Manually Draw Digits
+      const int start_x = 8;
+      const int start_y = 1;
+      auto draw_digit = [&](int x, int y, const uint8_t rows[5]) {
+        for (int r = 0; r < 5; r++) {
+          for (int c = 0; c < 3; c++) {
+            if (rows[r] & (1 << (2 - c))) {
+              it.draw_pixel_at(x + c, y + r, esphome::display::COLOR_ON);
+            }
+          }
+        }
+      };
+
+      static const uint8_t D2[5] = {0b111,0b001,0b111,0b100,0b111};
+      static const uint8_t D3[5] = {0b111,0b001,0b111,0b001,0b111};
+      static const uint8_t D4[5] = {0b101,0b101,0b111,0b001,0b001};
+      static const uint8_t D0[5] = {0b111,0b101,0b101,0b101,0b111};
+      // Clear + draw
+      it.fill(esphome::display::COLOR_OFF);
+
+      int x = start_x;
+      draw_digit(x, start_y, D2); x += 4;
+      draw_digit(x, start_y, D4); x += 4;
+      draw_digit(x, start_y, D3); x += 4;
+      draw_digit(x, start_y, D0);

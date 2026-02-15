@@ -55,12 +55,12 @@ func main() {
 
 	apiKey := os.Getenv("FACEIT_API_KEY")
 	if apiKey == "" {
-		fatal("FACEIT_API_KEY is required (in .env or environment)")
+		fatal("FACEIT_API_KEY is required")
 	}
 
-	nickname := os.Getenv("FACEIT_NICKNAME")
+	nickname := os.Getenv("FACEIT_NAME")
 	if nickname == "" {
-		fatal("FACEIT_NICKNAME is required (in .env or environment)")
+		fatal("FACEIT_NAME is required")
 	}
 
 	ctx := context.Background()
@@ -212,8 +212,6 @@ func currentElo(player *playerLookupResponse, game string) int {
 	return 0
 }
 
-// activated_at appears in /players as an ISO-8601 timestamp string.
-// This parses common RFC3339 variants and returns whole days since activation.
 func accountAgeDays(activatedAt string, now time.Time) (int, error) {
 	s := strings.TrimSpace(activatedAt)
 	if s == "" {
@@ -252,35 +250,6 @@ func parseISOTime(s string) (time.Time, error) {
 		}
 	}
 	return time.Time{}, lastErr
-}
-
-// FACEIT stats lifetime values are commonly strings; this handles string/number types.
-func lifetimeInt(lifetime map[string]interface{}, keys ...string) (int, error) {
-	if lifetime == nil {
-		return 0, fmt.Errorf("lifetime missing in stats response")
-	}
-
-	for _, k := range keys {
-		if v, ok := lifetime[k]; ok {
-			if n, ok2 := toInt(v); ok2 {
-				return n, nil
-			}
-			return 0, fmt.Errorf("lifetime[%q] present but not an int: %T", k, v)
-		}
-	}
-
-	for lk, v := range lifetime {
-		for _, want := range keys {
-			if strings.EqualFold(strings.TrimSpace(lk), strings.TrimSpace(want)) {
-				if n, ok := toInt(v); ok {
-					return n, nil
-				}
-				return 0, fmt.Errorf("lifetime[%q] present but not an int: %T", lk, v)
-			}
-		}
-	}
-
-	return 0, fmt.Errorf("none of the keys found in lifetime: %v", keys)
 }
 
 func toInt(v interface{}) (int, bool) {
