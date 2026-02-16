@@ -5,13 +5,14 @@ A statrak display that fetches player stats with the FaceIT and Leetify API
 
 For now, the code only supports FaceIT ELO, but it will be expanded to additional stats such as Win/Loss, CS2 Premiere rank, league placement, and more.
 
-## Roadmap / TODO
+## TODO
 
-- Fix Font Scaling
+- Fix Font Scaling (Alternatively, look into different displays)
 - Store local variables in SQLite
 - Display Extended FaceIT stats
-- Leetify API Setup
-- Mini Display Option
+- Leetify API
+- Twitch API
+- Edit case .stl to fit under 3D Printed AWP Asiimov
 
 ## Flashing ESP32
 ### Prereqs:
