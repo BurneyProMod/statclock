@@ -59,3 +59,4 @@ The FACEIT API key should be treated as a secret. Do not embed it into distribut
 
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
+2) https://mholt.github.io/json-to-go/
