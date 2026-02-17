@@ -33,15 +33,13 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 
 - Pipx
 - ESP-Home
-- Go installed
-- A FACEIT Data API key
-- `.env` configured with your FACEIT API key and player nickname
+- Go
+- A FACEIT API key
 
 ## Setup
 1) Edit the `.env.example` file in the project root:
 ```
 FACEIT_API_KEY=your_key_here
-FACEIT_NICKNAME=username_here
 FACEIT_GAME=cs2
 ```
 Then rename to `.env`
@@ -54,8 +52,6 @@ go mod tidy
 4) Run:
 `go run .`
 
-Notes
-The FACEIT API key should be treated as a secret. Do not embed it into distributed firmware/devices.
-
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
+2) https://mholt.github.io/json-to-go/
