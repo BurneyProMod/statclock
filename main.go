@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"statclock/api"
+	"statclock/db"
 
 	"github.com/joho/godotenv"
 )
@@ -82,6 +83,16 @@ func main() {
 
 	// Get player object
 	player := GetPlayer(client, ctx, nickname, game)
+	// Open database
+	database := db.OpenDB("statclock.db")
+	defer database.Close()
+
+	// Save player to database
+	database.SavePlayer(db.Player{
+		PlayerID: player.PlayerID,
+		Nickname: player.Nickname,
+		SteamID:  player.SteamID,
+	})
 
 	// Display player information
 	fmt.Printf("Player ID: %s\n", player.PlayerID)

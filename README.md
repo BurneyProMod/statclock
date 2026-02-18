@@ -47,10 +47,11 @@ Then rename to `.env`
 2) Install Dependencies:
 ```
 go get github.com/joho/godotenv@latest
+go get modernc.org/sqlite
 go mod tidy
 ```
 4) Run:
-`go run .`
+`go build -o statclock.exe`
 
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
