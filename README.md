@@ -2,6 +2,8 @@
 
 ![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
 A statrak display that fetches player stats with the FaceIT and Leetify API
+![In-Game Reference](images/stattrakGameReference.jpg)
+(Image Source: https://skinsmonkey.com/blog/best-csgo-stattrak-skins)
 
 For now, the code only supports FaceIT ELO, but it will be expanded to additional stats such as Win/Loss, CS2 Premiere rank, league placement, and more.
 
@@ -33,9 +35,7 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 
 - Pipx
 - ESP-Home
-- Go installed
-- A FACEIT Data API key
-- `.env` configured with your FACEIT API key and player nickname
+- Go
 
 ## Setup
 1) Edit the `.env.example` file in the project root:
@@ -53,9 +53,6 @@ go mod tidy
 ```
 4) Run:
 `go run .`
-
-Notes
-The FACEIT API key should be treated as a secret. Do not embed it into distributed firmware/devices.
 
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
