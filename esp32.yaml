@@ -1,5 +1,5 @@
 esphome:
-  name: faceitClock
+  name: faceit-clock
 
 esp32:
   variant: esp32c3
