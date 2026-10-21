@@ -6,8 +6,33 @@ esp32:
   board: esp32-c3-devkitm-1
   framework:
     type: arduino
-  
+
 logger:
+
+# Wi-Fi details live in secrets.yaml (see secrets.example.yaml).
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# Wireless firmware updates after the first USB flash.
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+# Lets the Go program set the Elo with:
+#   POST http://faceit-clock.local/number/elo/set?value=2009
+web_server:
+  port: 80
+
+number:
+  - platform: template
+    name: "elo"
+    id: elo
+    optimistic: true
+    restore_value: true # keep showing the last Elo after a reboot
+    min_value: 0
+    max_value: 9999
+    step: 1
 
 spi:
   clk_pin: GPIO5
@@ -26,10 +51,22 @@ display:
     intensity: 8
     update_interval: 250ms
     lambda: |-
-      // Manually Draw Digits
-      const int start_x = 8;
-      const int start_y = 1;
-      auto draw_digit = [&](int x, int y, const uint8_t rows[5]) {
+      // Hand-drawn 3x5 digits. Each row is 3 bits, left to right.
+      static const uint8_t DIGITS[10][5] = {
+        {0b111,0b101,0b101,0b101,0b111}, // 0
+        {0b010,0b110,0b010,0b010,0b111}, // 1
+        {0b111,0b001,0b111,0b100,0b111}, // 2
+        {0b111,0b001,0b111,0b001,0b111}, // 3
+        {0b101,0b101,0b111,0b001,0b001}, // 4
+        {0b111,0b100,0b111,0b001,0b111}, // 5
+        {0b111,0b100,0b111,0b101,0b111}, // 6
+        {0b111,0b001,0b001,0b001,0b001}, // 7
+        {0b111,0b101,0b111,0b101,0b111}, // 8
+        {0b111,0b101,0b111,0b001,0b111}, // 9
+      };
+      static const uint8_t DASH[5] = {0b000,0b000,0b111,0b000,0b000};
+
+      auto draw_glyph = [&](int x, int y, const uint8_t rows[5]) {
         for (int r = 0; r < 5; r++) {
           for (int c = 0; c < 3; c++) {
             if (rows[r] & (1 << (2 - c))) {
@@ -39,15 +76,15 @@ display:
         }
       };
 
-      static const uint8_t D2[5] = {0b111,0b001,0b111,0b100,0b111};
-      static const uint8_t D3[5] = {0b111,0b001,0b111,0b001,0b111};
-      static const uint8_t D4[5] = {0b101,0b101,0b111,0b001,0b001};
-      static const uint8_t D0[5] = {0b111,0b101,0b101,0b101,0b111};
-      // Clear + draw
-      it.fill(esphome::display::COLOR_OFF);
+      // Show "----" until the first Elo arrives.
+      std::string text = std::isnan(id(elo).state) ? "----" : std::to_string((int) id(elo).state);
 
-      int x = start_x;
-      draw_digit(x, start_y, D2); x += 4;
-      draw_digit(x, start_y, D4); x += 4;
-      draw_digit(x, start_y, D3); x += 4;
-      draw_digit(x, start_y, D0);
+      // Center the text: each glyph is 3 pixels wide plus 1 pixel of space.
+      const int start_y = 1;
+      int x = (it.get_width() - ((int) text.size() * 4 - 1)) / 2;
+
+      it.fill(esphome::display::COLOR_OFF);
+      for (char ch : text) {
+        draw_glyph(x, start_y, ch == '-' ? DASH : DIGITS[ch - '0']);
+        x += 4;
+      }
