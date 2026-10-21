@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -33,8 +34,9 @@ func main() {
 	client := api.NewClient(apiKey)
 
 	player, err := client.GetPlayerByNickname(ctx, nickname, *game)
-	if err != nil && *game == "cs2" {
+	if errors.Is(err, api.ErrNotFound) && *game == "cs2" {
 		// Some older accounts are only registered under csgo.
+		fmt.Fprintf(os.Stderr, "note: no cs2 profile for %q, trying csgo\n", nickname)
 		*game = "csgo"
 		player, err = client.GetPlayerByNickname(ctx, nickname, *game)
 	}
