@@ -17,6 +17,7 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 - Leetify API
 - Twitch API
 - Edit case .stl to fit under 3D Printed AWP Asiimov
+- HTTP server that displays pull their stats from, instead of the laptop pushing to one display. Needed before selling: it keeps the FACEIT API key off the devices and lets one server feed many displays.
 
 ## Flashing ESP32
 ### Prereqs:
@@ -25,8 +26,13 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 2) Install ESPHome
 `pipx install esphome`
 ### Flashing:
-1) In the repo directory, use the command:
+1) Copy `secrets.example.yaml` to `secrets.yaml` and fill in your Wi-Fi details and an OTA password.
+2) Plug in the ESP32 over USB and run this in the repo directory:
 `esphome run esp32.yaml`
+
+After the first USB flash, `esphome run esp32.yaml` can update the firmware over Wi-Fi.
+
+The display shows `----` until it receives an Elo.
 
 ## FACEIT API Documentation
 - https://docs.faceit.com/api/data/
@@ -57,6 +63,12 @@ Optional flags: `-metric elo|matches|age|wl` (default `elo`), `-game cs2|csgo`.
 
 Each lookup also saves the player's ID, nickname, and Steam ID to a local SQLite file, `stattrak.db`.
 
+3) Keep the display updated (fetches the Elo and sends it to the display every minute):
+```
+go run ./cmd/stattrak -device http://faceit-clock.local
+```
+Use `-interval 5m` to change how often it updates (10s minimum). If `faceit-clock.local` doesn't resolve on your network, use the display's IP address instead (shown in the ESPHome logs).
+
 ## Running Tests
 ```
 go test ./...
@@ -67,6 +79,7 @@ API tests run against a local fake FACEIT server using the sample responses in `
 ```
 api/            FACEIT Data API client
 db/             SQLite storage for player info
+display/        Sends the Elo to the LED display
 cmd/stattrak/   Command-line entry point
 esp32.yaml      ESPHome firmware for the LED matrix
 ```

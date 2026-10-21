@@ -32,3 +32,7 @@ go.work.sum
 # .vscode/
 # Local player database
 *.db
+
+# ESPHome secrets and build output
+secrets.yaml
+.esphome/
