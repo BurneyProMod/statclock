@@ -1,5 +1,7 @@
 # StatTrak ESP32
 
+[![CI](https://github.com/BurneyProMod/stattrak-esp32/actions/workflows/ci.yml/badge.svg)](https://github.com/BurneyProMod/stattrak-esp32/actions/workflows/ci.yml)
+
 ![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
 A statrak display that fetches player stats with the FaceIT and Leetify API
 ![In-Game Reference](images/stattrakGameReference.jpg)
@@ -54,6 +56,12 @@ go run ./cmd/stattrak
 Optional flags: `-metric elo|matches|age|wl` (default `elo`), `-game cs2|csgo`.
 
 Each lookup also saves the player's ID, nickname, and Steam ID to a local SQLite file, `stattrak.db`.
+
+## Running Tests
+```
+go test ./...
+```
+API tests run against a local fake FACEIT server using the sample responses in `api/testdata/`, so no API key is needed.
 
 ## Project Layout
 ```
