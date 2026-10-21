@@ -23,8 +23,8 @@ func OpenDB(path string) *DB {
 	return d
 }
 
-// CloseDB closes the database connection
-func (d *DB) CloseDB() {
+// Close closes the database connection
+func (d *DB) Close() {
 	if err := d.conn.Close(); err != nil {
 		log.Printf("Error closing database: %v", err)
 	}
