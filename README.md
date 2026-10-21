@@ -1,4 +1,4 @@
-# FACEIT Dot Matrix Display
+# StatTrak ESP32
 
 ![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
 A statrak display that fetches player stats with the FaceIT and Leetify API
@@ -36,6 +36,7 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 - Pipx
 - ESP-Home
 - Go 1.24+
+- A FACEIT API key
 
 ## Setup
 1) Edit the `.env.example` file in the project root:
@@ -48,9 +49,20 @@ Then rename to `.env`
 
 2) Run (dependencies are fetched automatically from `go.mod`):
 ```
-go run .
+go run ./cmd/stattrak
 ```
 Optional flags: `-metric elo|matches|age|wl` (default `elo`), `-game cs2|csgo`.
 
+Each lookup also saves the player's ID, nickname, and Steam ID to a local SQLite file, `stattrak.db`.
+
+## Project Layout
+```
+api/            FACEIT Data API client
+db/             SQLite storage for player info
+cmd/stattrak/   Command-line entry point
+esp32.yaml      ESPHome firmware for the LED matrix
+```
+
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
+2) https://mholt.github.io/json-to-go/
