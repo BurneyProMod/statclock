@@ -1,0 +1,15 @@
+{
+  "player_id": "11111111-2222-3333-4444-555555555555",
+  "game_id": "cs2",
+  "lifetime": {
+    "Matches": "1687",
+    "Total Matches": "1687",
+    "Wins": "849",
+    "Win Rate %": "50",
+    "K/D Ratio": "1.05",
+    "ADR": "82.3",
+    "Longest Win Streak": "9",
+    "Recent Results": ["1", "0", "1", "1", "0"]
+  },
+  "segments": []
+}

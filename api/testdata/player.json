@@ -1,0 +1,27 @@
+{
+  "player_id": "11111111-2222-3333-4444-555555555555",
+  "nickname": "test-player",
+  "steam_id_64": "76561190000000000",
+  "steam_nickname": "test-player",
+  "activated_at": "2018-08-25T02:02:58.379Z",
+  "country": "us",
+  "verified": false,
+  "games": {
+    "cs2": {
+      "faceit_elo": 2009,
+      "skill_level": 10,
+      "skill_level_label": "10",
+      "region": "NA",
+      "game_player_id": "76561190000000000",
+      "game_player_name": "test-player"
+    },
+    "csgo": {
+      "faceit_elo": 1850,
+      "skill_level": 9,
+      "skill_level_label": "9",
+      "region": "NA",
+      "game_player_id": "76561190000000000",
+      "game_player_name": "test-player"
+    }
+  }
+}
