@@ -58,9 +58,9 @@ func main() {
 		fatal("FACEIT_API_KEY is required")
 	}
 
-	nickname := os.Getenv("FACEIT_NAME")
+	nickname := os.Getenv("FACEIT_NICKNAME")
 	if nickname == "" {
-		fatal("FACEIT_NAME is required")
+		fatal("FACEIT_NICKNAME is required")
 	}
 
 	ctx := context.Background()
@@ -250,6 +250,35 @@ func parseISOTime(s string) (time.Time, error) {
 		}
 	}
 	return time.Time{}, lastErr
+}
+
+// FACEIT stats lifetime values are commonly strings; this handles string/number types.
+func lifetimeInt(lifetime map[string]interface{}, keys ...string) (int, error) {
+	if lifetime == nil {
+		return 0, fmt.Errorf("lifetime missing in stats response")
+	}
+
+	for _, k := range keys {
+		if v, ok := lifetime[k]; ok {
+			if n, ok2 := toInt(v); ok2 {
+				return n, nil
+			}
+			return 0, fmt.Errorf("lifetime[%q] present but not an int: %T", k, v)
+		}
+	}
+
+	for lk, v := range lifetime {
+		for _, want := range keys {
+			if strings.EqualFold(strings.TrimSpace(lk), strings.TrimSpace(want)) {
+				if n, ok := toInt(v); ok {
+					return n, nil
+				}
+				return 0, fmt.Errorf("lifetime[%q] present but not an int: %T", lk, v)
+			}
+		}
+	}
+
+	return 0, fmt.Errorf("none of the keys found in lifetime: %v", keys)
 }
 
 func toInt(v interface{}) (int, bool) {

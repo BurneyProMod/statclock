@@ -35,7 +35,7 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 
 - Pipx
 - ESP-Home
-- Go
+- Go 1.24+
 
 ## Setup
 1) Edit the `.env.example` file in the project root:
@@ -46,13 +46,11 @@ FACEIT_GAME=cs2
 ```
 Then rename to `.env`
 
-2) Install Dependencies:
+2) Run (dependencies are fetched automatically from `go.mod`):
 ```
-go get github.com/joho/godotenv@latest
-go mod tidy
+go run .
 ```
-4) Run:
-`go run .`
+Optional flags: `-metric elo|matches|age|wl` (default `elo`), `-game cs2|csgo`.
 
 ## References:
 1) https://www.xda-developers.com/built-15-esp32-smart-clock/
