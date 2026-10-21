@@ -17,7 +17,7 @@ For now, the code only supports FaceIT ELO, but it will be expanded to additiona
 - Leetify API
 - Twitch API
 - Edit case .stl to fit under 3D Printed AWP Asiimov
-- HTTP server that displays pull their stats from, instead of the laptop pushing to one display. Needed before selling: it keeps the FACEIT API key off the devices and lets one server feed many displays.
+- HTTP server that displays pull their stats from, instead of the laptop pushing to one display.
 
 ## Flashing ESP32
 ### Prereqs:
