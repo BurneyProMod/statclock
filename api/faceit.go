@@ -5,6 +5,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,13 +15,17 @@ import (
 	"time"
 )
 
-const defaultBaseURL = "https://open.faceit.com/data/v4"
+const (
+	defaultBaseURL = "https://open.faceit.com/data/v4"
+	maxAttempts    = 3
+)
 
 // Client calls the FACEIT Data API. Create one with NewClient and reuse it.
 type Client struct {
 	APIKey     string
 	BaseURL    string
 	HTTPClient *http.Client
+	RetryDelay time.Duration // wait before the first retry; doubles each time
 }
 
 func NewClient(apiKey string) *Client {
@@ -28,6 +33,7 @@ func NewClient(apiKey string) *Client {
 		APIKey:     apiKey,
 		BaseURL:    defaultBaseURL,
 		HTTPClient: &http.Client{Timeout: 15 * time.Second},
+		RetryDelay: time.Second,
 	}
 }
 
@@ -105,7 +111,34 @@ func (s *PlayerStats) LifetimeInt(keys ...string) (int, error) {
 }
 
 // get sends an authenticated GET request and decodes the JSON response into v.
+// Rate-limit (429) and server (5xx) errors are retried with a growing delay.
 func (c *Client) get(ctx context.Context, path string, v any) error {
+	delay := c.RetryDelay
+	for attempt := 1; ; attempt++ {
+		err := c.getOnce(ctx, path, v)
+
+		var apiErr *APIError
+		retryable := errors.As(err, &apiErr) &&
+			(apiErr.StatusCode == http.StatusTooManyRequests || apiErr.StatusCode >= 500)
+		if !retryable || attempt == maxAttempts {
+			return err
+		}
+
+		wait := delay
+		if apiErr.RetryAfter > 0 {
+			wait = apiErr.RetryAfter
+		}
+		select {
+		case <-time.After(wait):
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+		delay *= 2
+	}
+}
+
+// getOnce makes a single request with no retries.
+func (c *Client) getOnce(ctx context.Context, path string, v any) error {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.BaseURL+path, nil)
 	if err != nil {
 		return err
@@ -121,9 +154,17 @@ func (c *Client) get(ctx context.Context, path string, v any) error {
 
 	if res.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(io.LimitReader(res.Body, 1024))
-		return fmt.Errorf("http %d: %s", res.StatusCode, strings.TrimSpace(string(body)))
+		retryAfter, _ := strconv.Atoi(res.Header.Get("Retry-After"))
+		return &APIError{
+			StatusCode: res.StatusCode,
+			Body:       strings.TrimSpace(string(body)),
+			RetryAfter: time.Duration(retryAfter) * time.Second,
+		}
 	}
-	return json.NewDecoder(res.Body).Decode(v)
+	if err := json.NewDecoder(res.Body).Decode(v); err != nil {
+		return fmt.Errorf("decode response: %w", err)
+	}
+	return nil
 }
 
 // toInt converts a decoded JSON number or numeric string to an int.
