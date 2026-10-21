@@ -1,4 +1,4 @@
-module github.com/BurneyProMod/statclock
+module github.com/BurneyProMod/stattrak-esp32
 
 go 1.24.4
 

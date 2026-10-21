@@ -1,4 +1,4 @@
-# FACEIT Dot Matrix Display
+# StatTrak ESP32
 
 ![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
 A statrak display that fetches player stats with the FaceIT and Leetify API
