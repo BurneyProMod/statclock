@@ -3,21 +3,50 @@
 [![CI](https://github.com/BurneyProMod/stattrak-esp32/actions/workflows/ci.yml/badge.svg)](https://github.com/BurneyProMod/stattrak-esp32/actions/workflows/ci.yml)
 
 ![v0.1 - ELO Display](images/showcaseElo-v1.jpg)
-A statrak display that fetches player stats with the FaceIT and Leetify API
+A StatTrak inspired display you can actually inspect.
+
 ![In-Game Reference](images/stattrakGameReference.jpg)
 (Image Source: https://skinsmonkey.com/blog/best-csgo-stattrak-skins)
 
-For now, the code only supports FaceIT ELO, but it will be expanded to additional stats such as Win/Loss, CS2 Premiere rank, league placement, and more.
+StatTrak ESP32 is an IoT statistics display that connects a Go application to an ESP32-powered LED matrix. The application retrieves Counter-Strike player statistics from the FACEIT REST API and periodically updates the physical display over Wi-Fi.
+
+The CLI currently supports FACEIT Elo, total matches, account age, and win/loss statistics. The ESP32 display currently presents Elo, with additional on-device statistics and integrations planned.
 
 ## TODO
 
-- Fix Font Scaling (Alternatively, look into different displays)
-- Store local variables in SQLite
-- Display Extended FaceIT stats
-- Leetify API
-- Twitch API
-- Edit case .stl to fit under 3D Printed AWP Asiimov
-- HTTP server that displays pull their stats from, instead of the laptop pushing to one display.
+## Current Features
+
+- FACEIT Data API v4 integration using Go.
+- CLI support for Elo, total matches, account age, and win/loss statistics.
+- ESP32-C3 LED matrix displaying FACEIT Elo, updated over Wi-Fi at configurable intervals.
+- SQLite persistence for player identifiers and profile information.
+- API retries with exponential backoff, rate-limit handling, and context-aware cancellation.
+- ESPHome firmware with OTA updates and persisted display values.
+- Automated Go tests and GitHub Actions CI.
+
+## Roadmap
+
+### Display Improvements
+- [ ] On-device support for additional FACEIT statistics (matches, win/loss, account age)
+- [ ] Metric rotation or selectable display modes
+- [ ] Improve font scaling, alignment, and readability
+
+### Data and Reliability
+- [ ] Extend SQLite persistence to cache last-fetched statistics and refresh timestamps
+- [ ] Add offline fallback behavior using cached statistics
+- [ ] Improve visibility of connectivity and API errors on device
+
+### Architecture
+- [ ] Evaluate a lightweight backend service to centralize FACEIT API requests.
+- [ ] Support multiple ESP32 displays through a shared API or device-side polling
+
+### Future Integrations
+- [ ] Add Leetify API support
+- [ ] Add Twitch integration
+
+### Hardware
+- [ ] 3D-printable enclosures
+
 
 ## Flashing ESP32
 ### Prereqs:
